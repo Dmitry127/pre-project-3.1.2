@@ -1,7 +1,6 @@
 package ru.dmitry.seleznev.controller;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -53,14 +52,7 @@ public class AdminController {
 
     @PatchMapping()
     public String updateUser(@ModelAttribute("user") User user, @RequestParam(defaultValue = "") String adminRole) {
-        User persistentUser = userService.getUser(user.getId());
-        persistentUser.setEmail(user.getEmail());
-        persistentUser.setPassword(user.getPassword());
-        persistentUser.setFirstName(user.getFirstName());
-        persistentUser.setLastName(user.getLastName());
-        persistentUser.setAge(user.getAge());
-        persistentUser.setRoles(userService.getRoleSet(adminRole));
-        userService.updateUser(persistentUser);
+        userService.updateUser(user, adminRole);
         return "redirect:/admin";
     }
 

@@ -4,44 +4,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.dmitry.seleznev.dao.UserDAO;
 import ru.dmitry.seleznev.model.Role;
 import ru.dmitry.seleznev.model.User;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
+@Transactional
 public class UserServiceImpl implements  UserService, UserDetailsService {
 
     private final UserDAO userDAO;
-
-    @PostConstruct
-    private void adminCreate() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(getRole("ADMIN"));
-        roles.add(getRole("USER"));
-        User user = new User("ADMIN", "ADMIN", "admin@mail.ru", "admin", 100, roles);
-        userDAO.saveUser(user);
-
-        Set<Role> rolesuser = new HashSet<>();
-        rolesuser.add(getRole("USER"));
-        User user1 = new User("user", "user", "user@mail.ru", "user", 10, rolesuser);
-        userDAO.saveUser(user1);
-    }
-
-
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.saveUser(user);
     }
 
@@ -66,8 +59,16 @@ public class UserServiceImpl implements  UserService, UserDetailsService {
     }
 
     @Override
-    public void updateUser(User user) {
-        userDAO.updateUser(user);
+    public void updateUser(User user, String adminRole) {
+        User persistentUser = getUser(user.getId());
+        persistentUser.setEmail(user.getEmail());
+        persistentUser.setFirstName(user.getFirstName());
+        persistentUser.setLastName(user.getLastName());
+        persistentUser.setAge(user.getAge());
+        persistentUser.setRoles(getRoleSet(adminRole));
+        if (!user.getPassword().equals(persistentUser.getPassword())) {
+            persistentUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
     }
 
     @Override
