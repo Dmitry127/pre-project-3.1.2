@@ -1,15 +1,11 @@
 package ru.dmitry.seleznev.model;
 
-
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "users")
@@ -29,7 +25,6 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
-
     @Column(name = "firstName")
     private String firstName;
 
@@ -39,8 +34,8 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-    public User() {}
-
+    public User() {
+    }
 
     public User(String firstName, String lastName, String email, String password, int age, Set<Role> roles) {
         this.firstName = firstName;
@@ -50,8 +45,6 @@ public class User implements UserDetails {
         this.age = age;
         this.roles = roles;
     }
-
-
 
     public void setPassword(String password) {
         this.password = password;
@@ -63,7 +56,7 @@ public class User implements UserDetails {
 
     public String getRolesString() {
         StringBuilder str = new StringBuilder();
-        for (Role role:
+        for (Role role :
                 roles) {
             str.append(role.toString()).append(" ");
         }

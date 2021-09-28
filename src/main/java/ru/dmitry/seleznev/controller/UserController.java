@@ -7,8 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.dmitry.seleznev.service.UserService;
 
-import java.security.Principal;
-
 @Controller
 @RequestMapping("/user")
 public class UserController {

@@ -1,12 +1,9 @@
 package ru.dmitry.seleznev.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.dmitry.seleznev.model.Role;
 import ru.dmitry.seleznev.model.User;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -15,7 +12,6 @@ public class UserDAOImpl implements UserDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
-
 
     @Override
     public void saveUser(User user) {
@@ -31,20 +27,6 @@ public class UserDAOImpl implements UserDAO {
     public User getUser(String email) {
         return entityManager.createQuery("select u from  User u join fetch u.roles where u.email = :email", User.class)
                 .setParameter("email", email).getSingleResult();
-    }
-
-    @Override
-    public Role getRole(String role) {
-        try {
-            return entityManager.createQuery("select r from Role r where r.role = :role", Role.class)
-                    .setParameter("role", "ROLE_" + role).getSingleResult();
-        } catch (NoResultException e) {
-            Role newRole = new Role();
-            newRole.setRole("ROLE_" + role);
-            entityManager.persist(newRole);
-            return entityManager.createQuery("select r from Role r where r.role = :role", Role.class)
-                    .setParameter("role", "ROLE_" + role).getSingleResult();
-        }
     }
 
     @Override
