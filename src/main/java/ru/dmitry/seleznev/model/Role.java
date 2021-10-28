@@ -10,15 +10,20 @@ import java.util.Set;
 public class Role implements GrantedAuthority {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
     private String role;
 
-    @Transient
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
+
+    public Role() {}
+
+    public Role(String role) {
+        this.role = role;
+    }
 
     @Override
     public String getAuthority() {
@@ -43,6 +48,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return role.substring(5);
+        return role;
     }
 }

@@ -22,22 +22,20 @@ public class AdminController {
     @GetMapping()
     public String adminPage(Model model, Authentication auth) {
         model.addAttribute("users", userService.getAllUsers());
-
         User user = userService.getUser(auth.getName());
         model.addAttribute("loggedUser", user);
-
         return "admin";
     }
 
     @PostMapping()
-    public String saveUser(@ModelAttribute("user") User user, @RequestParam(defaultValue = "") String adminRole) {
-        userService.saveUser(user, adminRole);
+    public String saveUser(@ModelAttribute("user") User user, @RequestParam String roles) {
+        userService.saveUser(user, roles);
         return "redirect:/admin";
     }
 
     @PatchMapping()
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam(defaultValue = "") String adminRole) {
-        userService.updateUser(user, adminRole);
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam String roles) {
+        userService.updateUser(user, roles);
         return "redirect:/admin";
     }
 

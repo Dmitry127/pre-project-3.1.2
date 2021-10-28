@@ -10,7 +10,7 @@ import ru.dmitry.seleznev.service.UserService;
 @Component
 public class PopulateDb {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public PopulateDb(UserService userService) {
@@ -19,11 +19,10 @@ public class PopulateDb {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
+        User admin = new User("admin", "admin", "admin@mail.ru", "admin", 99, null);
+        userService.saveUser(admin, "ADMIN USER");
+
         User user = new User("user", "user", "user@mail.ru", "user", 10, null);
         userService.saveUser(user, "USER");
-
-        User admin = new User("admin", "admin", "admin@mail.ru", "admin", 99, null);
-        userService.saveUser(admin, "ADMIN");
-
     }
 }

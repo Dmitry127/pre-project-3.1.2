@@ -67,6 +67,10 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void addRole(String role) {
+        roles.add(new Role(role));
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
