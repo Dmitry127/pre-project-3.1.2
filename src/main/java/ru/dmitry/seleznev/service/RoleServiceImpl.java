@@ -3,13 +3,11 @@ package ru.dmitry.seleznev.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.dmitry.seleznev.dao.RoleDAO;
 import ru.dmitry.seleznev.model.Role;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Service
 public class RoleServiceImpl implements RoleService {
